@@ -264,15 +264,15 @@ namespace Photon.Pun
             }
 
 
-            bool wasInRoom = NetworkingClient.CurrentRoom != null;
+            bool wasInRoom = NetworkingClient.CurrentRoomListItem != null;
             // when leaving a room, we clean up depending on that room's settings.
-            bool autoCleanupSettingOfRoom = wasInRoom && CurrentRoom.AutoCleanUp;
+            bool autoCleanupSettingOfRoom = wasInRoom && CurrentRoomListItem.AutoCleanUp;
 
             allowedReceivingGroups = new HashSet<byte>();
             blockedSendingGroups = new HashSet<byte>();
 
             // Cleanup all network objects (all spawned PhotonViews, local and remote)
-            if (autoCleanupSettingOfRoom || offlineModeRoom != null)
+            if (autoCleanupSettingOfRoom || _offlineModeRoomListItem != null)
             {
                 LocalCleanupAnythingInstantiated(true);
             }
@@ -1600,7 +1600,7 @@ namespace Photon.Pun
         /// <summary>Calls all locally controlled PhotonViews to write their updates in OnPhotonSerializeView. Called by a PhotonHandler.</summary>
         internal static void RunViewUpdate()
         {
-            if (PhotonNetwork.OfflineMode || CurrentRoom == null || CurrentRoom.Players == null)
+            if (PhotonNetwork.OfflineMode || CurrentRoomListItem == null || CurrentRoomListItem.Players == null)
             {
                 return;
             }
@@ -1608,7 +1608,7 @@ namespace Photon.Pun
 
             // no need to send OnSerialize messages while being alone (these are not buffered anyway)
 #if !PHOTON_DEVELOP
-            if (CurrentRoom.Players.Count <= 1)
+            if (CurrentRoomListItem.Players.Count <= 1)
             {
                 return;
             }
@@ -2088,19 +2088,19 @@ namespace Photon.Pun
         /// <summary>Internally used to detect the current scene and load it if PhotonNetwork.AutomaticallySyncScene is enabled.</summary>
         internal static void LoadLevelIfSynced()
         {
-            if (!PhotonNetwork.AutomaticallySyncScene || PhotonNetwork.IsMasterClient || PhotonNetwork.CurrentRoom == null)
+            if (!PhotonNetwork.AutomaticallySyncScene || PhotonNetwork.IsMasterClient || PhotonNetwork.CurrentRoomListItem == null)
             {
                 return;
             }
 
             // check if "current level" is set in props
-            if (!PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(CurrentSceneProperty))
+            if (!PhotonNetwork.CurrentRoomListItem.CustomProperties.ContainsKey(CurrentSceneProperty))
             {
                 return;
             }
 
             // if loaded level is not the one defined by master in props, load that level
-            object sceneId = PhotonNetwork.CurrentRoom.CustomProperties[CurrentSceneProperty];
+            object sceneId = PhotonNetwork.CurrentRoomListItem.CustomProperties[CurrentSceneProperty];
             if (sceneId is int)
             {
                 if (SceneManagerHelper.ActiveSceneBuildIndex != (int)sceneId)
@@ -2120,7 +2120,7 @@ namespace Photon.Pun
 
         internal static void SetLevelInPropsIfSynced(object levelId)
         {
-            if (!PhotonNetwork.AutomaticallySyncScene || !PhotonNetwork.IsMasterClient || PhotonNetwork.CurrentRoom == null)
+            if (!PhotonNetwork.AutomaticallySyncScene || !PhotonNetwork.IsMasterClient || PhotonNetwork.CurrentRoomListItem == null)
             {
                 return;
             }
@@ -2132,9 +2132,9 @@ namespace Photon.Pun
 
 
             // check if "current level" is already set in the room properties (then we don't set it again)
-            if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(CurrentSceneProperty))
+            if (PhotonNetwork.CurrentRoomListItem.CustomProperties.ContainsKey(CurrentSceneProperty))
             {
-                object levelIdInProps = PhotonNetwork.CurrentRoom.CustomProperties[CurrentSceneProperty];
+                object levelIdInProps = PhotonNetwork.CurrentRoomListItem.CustomProperties[CurrentSceneProperty];
                 //Debug.Log("levelId (to set): "+ levelId + " levelIdInProps: " + levelIdInProps + " SceneManagerHelper.ActiveSceneName: "+ SceneManagerHelper.ActiveSceneName);
 
                 if (levelId.Equals(levelIdInProps))
@@ -2177,7 +2177,7 @@ namespace Photon.Pun
             else if (levelId is string) setScene[CurrentSceneProperty] = (string)levelId;
             else Debug.LogError("Parameter levelId must be int or string!");
 
-            PhotonNetwork.CurrentRoom.SetCustomProperties(setScene);
+            PhotonNetwork.CurrentRoomListItem.SetCustomProperties(setScene);
             SendAllOutgoingCommands(); // send immediately! because: in most cases the client will begin to load and pause sending anything for a while
         }
 
@@ -2186,9 +2186,9 @@ namespace Photon.Pun
         {
             int actorNr = photonEvent.Sender;
             Player originatingPlayer = null;
-            if (actorNr > 0 && NetworkingClient.CurrentRoom != null)
+            if (actorNr > 0 && NetworkingClient.CurrentRoomListItem != null)
             {
-                originatingPlayer = NetworkingClient.CurrentRoom.GetPlayer(actorNr);
+                originatingPlayer = NetworkingClient.CurrentRoomListItem.GetPlayer(actorNr);
             }
 
             switch (photonEvent.Code)
@@ -2272,7 +2272,7 @@ namespace Photon.Pun
                 case EventCode.Leave:
 
                     // destroy objects & buffered messages
-                    if (CurrentRoom != null && CurrentRoom.AutoCleanUp && (originatingPlayer == null || !originatingPlayer.IsInactive))
+                    if (CurrentRoomListItem != null && CurrentRoomListItem.AutoCleanUp && (originatingPlayer == null || !originatingPlayer.IsInactive))
                     {
                         DestroyPlayerObjects(actorNr, true);
                     }
@@ -2429,7 +2429,7 @@ namespace Photon.Pun
                             }
 
                             Player prevOwner = view.Owner;
-                            Player newOwner = CurrentRoom.GetPlayer(newOwnerId, true);
+                            Player newOwner = CurrentRoomListItem.GetPlayer(newOwnerId, true);
 
                             view.OwnerActorNr= newOwnerId;
                             view.ControllerActorNr = newOwnerId;

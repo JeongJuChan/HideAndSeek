@@ -230,7 +230,7 @@ namespace Photon.Pun
             {
                 if (OfflineMode)
                 {
-                    return (offlineModeRoom != null) ? ClientState.Joined : ClientState.ConnectedToMasterServer;
+                    return (_offlineModeRoomListItem != null) ? ClientState.Joined : ClientState.ConnectedToMasterServer;
                 }
 
                 if (NetworkingClient == null)
@@ -260,7 +260,7 @@ namespace Photon.Pun
             {
                 if (OfflineMode)
                 {
-                    return CurrentRoom == null ? ServerConnection.MasterServer : ServerConnection.GameServer;
+                    return CurrentRoomListItem == null ? ServerConnection.MasterServer : ServerConnection.GameServer;
                 }
                 return (PhotonNetwork.NetworkingClient != null) ? PhotonNetwork.NetworkingClient.Server : ServerConnection.NameServer;
             }
@@ -304,16 +304,16 @@ namespace Photon.Pun
         /// <remarks>
         /// LoadBalancing Client is not aware of the Photon Offline Mode, so never use PhotonNetwork.NetworkingClient.CurrentRoom will be null if you are using OffLine Mode, while PhotonNetwork.CurrentRoom will be set when offlineMode is true
         /// </remarks>
-        public static Room CurrentRoom
+        public static RoomListItem CurrentRoomListItem
         {
             get
             {
                 if (offlineMode)
                 {
-                    return offlineModeRoom;
+                    return _offlineModeRoomListItem;
                 }
 
-                return NetworkingClient == null ? null : NetworkingClient.CurrentRoom;
+                return NetworkingClient == null ? null : NetworkingClient.CurrentRoomListItem;
             }
         }
 
@@ -371,11 +371,11 @@ namespace Photon.Pun
         {
             get
             {
-                Room room = CurrentRoom;
-                if (room != null)
+                RoomListItem roomListItem = CurrentRoomListItem;
+                if (roomListItem != null)
                 {
                     // TODO: implement more effectively. maybe cache?!
-                    return room.Players.Values.OrderBy((x) => x.ActorNumber).ToArray();
+                    return roomListItem.Players.Values.OrderBy((x) => x.ActorNumber).ToArray();
                 }
                 return new Player[0];
             }
@@ -388,11 +388,11 @@ namespace Photon.Pun
         {
             get
             {
-                Room room = CurrentRoom;
-                if (room != null)
+                RoomListItem roomListItem = CurrentRoomListItem;
+                if (roomListItem != null)
                 {
                     // TODO: implement more effectively. maybe cache?!
-                    return room.Players.Values.OrderBy((x) => x.ActorNumber).Where(x => !x.IsLocal).ToArray();
+                    return roomListItem.Players.Values.OrderBy((x) => x.ActorNumber).Where(x => !x.IsLocal).ToArray();
                 }
                 return new Player[0];
             }
@@ -468,14 +468,14 @@ namespace Photon.Pun
                 }
                 else
                 {
-                    bool wasInOfflineRoom = offlineModeRoom != null;
+                    bool wasInOfflineRoom = _offlineModeRoomListItem != null;
 
                     if (wasInOfflineRoom)
                     {
                         LeftRoomCleanup();
                     }
-                    offlineModeRoom = null;
-                    PhotonNetwork.NetworkingClient.CurrentRoom = null;
+                    _offlineModeRoomListItem = null;
+                    PhotonNetwork.NetworkingClient.CurrentRoomListItem = null;
                     NetworkingClient.ChangeLocalID(-1);
                     if (wasInOfflineRoom)
                     {
@@ -486,7 +486,7 @@ namespace Photon.Pun
         }
 
         private static bool offlineMode = false;
-        private static Room offlineModeRoom = null;
+        private static RoomListItem _offlineModeRoomListItem = null;
 
 
         /// <summary>Defines if all clients in a room should automatically load the same level as the Master Client.</summary>
@@ -515,7 +515,7 @@ namespace Photon.Pun
             set
             {
                 automaticallySyncScene = value;
-                if (automaticallySyncScene && CurrentRoom != null)
+                if (automaticallySyncScene && CurrentRoomListItem != null)
                 {
                     LoadLevelIfSynced();
                 }
@@ -814,7 +814,7 @@ namespace Photon.Pun
                     return true;
                 }
 
-                return NetworkingClient.CurrentRoom != null && NetworkingClient.CurrentRoom.MasterClientId == LocalPlayer.ActorNumber;  // TODO: implement MasterClient shortcut in LBC?
+                return NetworkingClient.CurrentRoomListItem != null && NetworkingClient.CurrentRoomListItem.MasterClientId == LocalPlayer.ActorNumber;  // TODO: implement MasterClient shortcut in LBC?
             }
         }
 
@@ -843,12 +843,12 @@ namespace Photon.Pun
                     return PhotonNetwork.LocalPlayer;
                 }
 
-                if (NetworkingClient == null || NetworkingClient.CurrentRoom == null)
+                if (NetworkingClient == null || NetworkingClient.CurrentRoomListItem == null)
                 {
                     return null;
                 }
 
-                return NetworkingClient.CurrentRoom.GetPlayer(NetworkingClient.CurrentRoom.MasterClientId);
+                return NetworkingClient.CurrentRoomListItem.GetPlayer(NetworkingClient.CurrentRoomListItem.MasterClientId);
             }
         }
 
@@ -1364,7 +1364,7 @@ namespace Photon.Pun
             if (OfflineMode)
             {
                 OfflineMode = false;
-                offlineModeRoom = null;
+                _offlineModeRoomListItem = null;
                 NetworkingClient.State = ClientState.Disconnecting;
                 NetworkingClient.OnStatusChanged(StatusCode.Disconnect);
                 return;
@@ -1571,7 +1571,7 @@ namespace Photon.Pun
                 return false;
             }
 
-            return CurrentRoom.SetMasterClient(masterClientPlayer);
+            return CurrentRoomListItem.SetMasterClient(masterClientPlayer);
         }
 
 
@@ -1650,7 +1650,7 @@ namespace Photon.Pun
         {
             if (OfflineMode)
             {
-                if (offlineModeRoom != null)
+                if (_offlineModeRoomListItem != null)
                 {
                     Debug.LogError("JoinRandomRoom failed. In offline mode you still have to leave a room to enter another.");
                     return false;
@@ -1706,7 +1706,7 @@ namespace Photon.Pun
         {
             if (OfflineMode)
             {
-                if (offlineModeRoom != null)
+                if (_offlineModeRoomListItem != null)
                 {
                     Debug.LogError("JoinRandomOrCreateRoom failed. In offline mode you still have to leave a room to enter another.");
                     return false;
@@ -1769,7 +1769,7 @@ namespace Photon.Pun
         {
             if (OfflineMode)
             {
-                if (offlineModeRoom != null)
+                if (_offlineModeRoomListItem != null)
                 {
                     Debug.LogError("CreateRoom failed. In offline mode you still have to leave a room to enter another.");
                     return false;
@@ -1837,7 +1837,7 @@ namespace Photon.Pun
         {
             if (OfflineMode)
             {
-                if (offlineModeRoom != null)
+                if (_offlineModeRoomListItem != null)
                 {
                     Debug.LogError("JoinOrCreateRoom failed. In offline mode you still have to leave a room to enter another.");
                     return false;
@@ -1902,7 +1902,7 @@ namespace Photon.Pun
         {
             if (OfflineMode)
             {
-                if (offlineModeRoom != null)
+                if (_offlineModeRoomListItem != null)
                 {
                     Debug.LogError("JoinRoom failed. In offline mode you still have to leave a room to enter another.");
                     return false;
@@ -2027,19 +2027,19 @@ namespace Photon.Pun
         {
             if (OfflineMode)
             {
-                offlineModeRoom = null;
+                _offlineModeRoomListItem = null;
                 NetworkingClient.MatchMakingCallbackTargets.OnLeftRoom();
                 NetworkingClient.ConnectionCallbackTargets.OnConnectedToMaster();
             }
             else
             {
-                if (CurrentRoom == null)
+                if (CurrentRoomListItem == null)
                 {
                     Debug.LogWarning("PhotonNetwork.CurrentRoom is null. You don't have to call LeaveRoom() when you're not in one. State: " + PhotonNetwork.NetworkClientState);
                 }
                 else
                 {
-                    becomeInactive = becomeInactive && CurrentRoom.PlayerTtl != 0; // in a room with playerTTL == 0, the operation "leave" will never turn a client inactive
+                    becomeInactive = becomeInactive && CurrentRoomListItem.PlayerTtl != 0; // in a room with playerTTL == 0, the operation "leave" will never turn a client inactive
                 }
                 return NetworkingClient.OpLeaveRoom(becomeInactive);
             }
@@ -2054,12 +2054,12 @@ namespace Photon.Pun
         /// </summary>
         private static void EnterOfflineRoom(string roomName, RoomOptions roomOptions, bool createdRoom)
         {
-            offlineModeRoom = new Room(roomName, roomOptions, true);
+            _offlineModeRoomListItem = new RoomListItem(roomName, roomOptions, true);
             NetworkingClient.ChangeLocalID(1);
-            offlineModeRoom.masterClientId = 1;
-            offlineModeRoom.AddPlayer(PhotonNetwork.LocalPlayer);
-            offlineModeRoom.LoadBalancingClient = PhotonNetwork.NetworkingClient;
-            PhotonNetwork.NetworkingClient.CurrentRoom = offlineModeRoom;
+            _offlineModeRoomListItem.masterClientId = 1;
+            _offlineModeRoomListItem.AddPlayer(PhotonNetwork.LocalPlayer);
+            _offlineModeRoomListItem.LoadBalancingClient = PhotonNetwork.NetworkingClient;
+            PhotonNetwork.NetworkingClient.CurrentRoomListItem = _offlineModeRoomListItem;
 
             if (createdRoom)
             {
@@ -2472,7 +2472,7 @@ namespace Photon.Pun
 
         public static GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null)
         {
-            if (CurrentRoom == null)
+            if (CurrentRoomListItem == null)
             {
                 Debug.LogError("Can not Instantiate before the client joined/created a room. State: "+PhotonNetwork.NetworkClientState);
                 return null;
@@ -2490,7 +2490,7 @@ namespace Photon.Pun
 
         public static GameObject InstantiateRoomObject(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null)
         {
-            if (CurrentRoom == null)
+            if (CurrentRoomListItem == null)
             {
                 Debug.LogError("Can not Instantiate before the client joined/created a room.");
                 return null;
@@ -2929,7 +2929,7 @@ namespace Photon.Pun
                 return;
             }
 
-            if (CurrentRoom == null)
+            if (CurrentRoomListItem == null)
             {
                 Debug.LogWarning("RPCs can only be sent in rooms. Call of \"" + methodName + "\" gets executed locally only, if at all.");
                 return;
@@ -2955,7 +2955,7 @@ namespace Photon.Pun
                 return;
             }
 
-            if (CurrentRoom == null)
+            if (CurrentRoomListItem == null)
             {
                 Debug.LogWarning("RPCs can only be sent in rooms. Call of \"" + methodName + "\" gets executed locally only, if at all.");
                 return;

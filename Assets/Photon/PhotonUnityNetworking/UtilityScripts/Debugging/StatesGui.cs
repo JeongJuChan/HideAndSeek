@@ -122,7 +122,7 @@ namespace Photon.Pun.UtilityScripts
             {
                 if (PhotonNetwork.InRoom)
                 {
-                    GUILayout.Label(this.RoomProps ? PhotonNetwork.CurrentRoom.ToStringFull() : PhotonNetwork.CurrentRoom.ToString());
+                    GUILayout.Label(this.RoomProps ? PhotonNetwork.CurrentRoomListItem.ToStringFull() : PhotonNetwork.CurrentRoomListItem.ToString());
                 }
                 else
                 {
@@ -152,10 +152,10 @@ namespace Photon.Pun.UtilityScripts
             {
                 if (PhotonNetwork.InRoom)
                 {
-                    int countExpected = (PhotonNetwork.CurrentRoom.ExpectedUsers != null) ? PhotonNetwork.CurrentRoom.ExpectedUsers.Length : 0;
+                    int countExpected = (PhotonNetwork.CurrentRoomListItem.ExpectedUsers != null) ? PhotonNetwork.CurrentRoomListItem.ExpectedUsers.Length : 0;
 
                     GUILayout.Label("Expected: " + countExpected + " " +
-                                   ((PhotonNetwork.CurrentRoom.ExpectedUsers != null) ? string.Join(",", PhotonNetwork.CurrentRoom.ExpectedUsers) : "")
+                                   ((PhotonNetwork.CurrentRoomListItem.ExpectedUsers != null) ? string.Join(",", PhotonNetwork.CurrentRoomListItem.ExpectedUsers) : "")
                                     );
 
                 }
@@ -182,7 +182,7 @@ namespace Photon.Pun.UtilityScripts
                 {
                     PhotonNetwork.LeaveRoom();
                 }
-                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerTtl>0 && GUILayout.Button("Leave(abandon)"))
+                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoomListItem.PlayerTtl>0 && GUILayout.Button("Leave(abandon)"))
                 {
                     PhotonNetwork.LeaveRoom(false);
                 }

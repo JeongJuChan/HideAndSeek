@@ -129,7 +129,7 @@ namespace Photon.Pun.Demo.SlotRacer
             }
 
             // depending on wether we control this instance locally, we force the car to become active ( because when you are alone in the room, serialization doesn't happen, but still we want to allow the user to race around)
-            if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            if (PhotonNetwork.CurrentRoomListItem.PlayerCount == 1)
             {
                 this.m_firstTake = false;
             }

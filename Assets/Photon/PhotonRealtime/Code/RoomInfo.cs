@@ -73,7 +73,7 @@ namespace Photon.Realtime
 
         /// <summary>Read-only "cache" of custom properties of a room. Set via Room.SetCustomProperties (not available for RoomInfo class!).</summary>
         /// <remarks>All keys are string-typed and the values depend on the game/application.</remarks>
-        /// <see cref="Room.SetCustomProperties"/>
+        /// <see cref="RoomListItem.SetCustomProperties"/>
         public Hashtable CustomProperties
         {
             get

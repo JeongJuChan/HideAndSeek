@@ -39,13 +39,13 @@ namespace Photon.Pun.UtilityScripts
         /// <value>The turn index</value>
         public int Turn
         {
-            get { return PhotonNetwork.CurrentRoom.GetTurn(); }
+            get { return PhotonNetwork.CurrentRoomListItem.GetTurn(); }
             private set
             {
 
                 _isOverCallProcessed = false;
 
-                PhotonNetwork.CurrentRoom.SetTurn(value, true);
+                PhotonNetwork.CurrentRoomListItem.SetTurn(value, true);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Photon.Pun.UtilityScripts
         /// <value>The elapsed time in the turn.</value>
         public float ElapsedTimeInTurn
         {
-            get { return ((float) (PhotonNetwork.ServerTimestamp - PhotonNetwork.CurrentRoom.GetTurnStart())) / 1000.0f; }
+            get { return ((float) (PhotonNetwork.ServerTimestamp - PhotonNetwork.CurrentRoomListItem.GetTurnStart())) / 1000.0f; }
         }
 
 
@@ -81,7 +81,7 @@ namespace Photon.Pun.UtilityScripts
         /// <value><c>true</c> if this turn is completed by all; otherwise, <c>false</c>.</value>
         public bool IsCompletedByAll
         {
-            get { return PhotonNetwork.CurrentRoom != null && Turn > 0 && this.finishedPlayers.Count == PhotonNetwork.CurrentRoom.PlayerCount; }
+            get { return PhotonNetwork.CurrentRoomListItem != null && Turn > 0 && this.finishedPlayers.Count == PhotonNetwork.CurrentRoomListItem.PlayerCount; }
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Photon.Pun.UtilityScripts
                 return;
             }
             
-            sender = PhotonNetwork.CurrentRoom.GetPlayer(senderId);
+            sender = PhotonNetwork.CurrentRoomListItem.GetPlayer(senderId);
             
             switch (eventCode)
 			{
@@ -339,12 +339,12 @@ namespace Photon.Pun.UtilityScripts
         /// <summary>
         /// Sets the turn.
         /// </summary>
-        /// <param name="room">Room reference</param>
+        /// <param name="roomListItem">Room reference</param>
         /// <param name="turn">Turn index</param>
         /// <param name="setStartTime">If set to <c>true</c> set start time.</param>
-        public static void SetTurn(this Room room, int turn, bool setStartTime = false)
+        public static void SetTurn(this RoomListItem roomListItem, int turn, bool setStartTime = false)
         {
-            if (room == null || room.CustomProperties == null)
+            if (roomListItem == null || roomListItem.CustomProperties == null)
             {
                 return;
             }
@@ -356,7 +356,7 @@ namespace Photon.Pun.UtilityScripts
                 turnProps[TurnStartPropKey] = PhotonNetwork.ServerTimestamp;
             }
 
-            room.SetCustomProperties(turnProps);
+            roomListItem.SetCustomProperties(turnProps);
         }
 
         /// <summary>
@@ -397,14 +397,14 @@ namespace Photon.Pun.UtilityScripts
         /// <param name="player">Player reference</param>
         public static int GetFinishedTurn(this Player player)
         {
-            Room room = PhotonNetwork.CurrentRoom;
-            if (room == null || room.CustomProperties == null || !room.CustomProperties.ContainsKey(TurnPropKey))
+            RoomListItem roomListItem = PhotonNetwork.CurrentRoomListItem;
+            if (roomListItem == null || roomListItem.CustomProperties == null || !roomListItem.CustomProperties.ContainsKey(TurnPropKey))
             {
                 return 0;
             }
 
             string propKey = FinishedTurnPropKey + player.ActorNumber;
-            return (int) room.CustomProperties[propKey];
+            return (int) roomListItem.CustomProperties[propKey];
         }
 
         /// <summary>
@@ -414,8 +414,8 @@ namespace Photon.Pun.UtilityScripts
         /// <param name="turn">Turn Index</param>
         public static void SetFinishedTurn(this Player player, int turn)
         {
-            Room room = PhotonNetwork.CurrentRoom;
-            if (room == null || room.CustomProperties == null)
+            RoomListItem roomListItem = PhotonNetwork.CurrentRoomListItem;
+            if (roomListItem == null || roomListItem.CustomProperties == null)
             {
                 return;
             }
@@ -424,7 +424,7 @@ namespace Photon.Pun.UtilityScripts
             Hashtable finishedTurnProp = new Hashtable();
             finishedTurnProp[propKey] = turn;
 
-            room.SetCustomProperties(finishedTurnProp);
+            roomListItem.SetCustomProperties(finishedTurnProp);
         }
     }
 }

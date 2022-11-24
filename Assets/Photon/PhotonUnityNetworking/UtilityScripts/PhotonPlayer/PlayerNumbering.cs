@@ -125,14 +125,14 @@ namespace Photon.Pun.UtilityScripts
         /// </summary>
        public void RefreshData()
         {
-            if (PhotonNetwork.CurrentRoom == null)
+            if (PhotonNetwork.CurrentRoomListItem == null)
             {
                 return;
             }
 
             if (PhotonNetwork.LocalPlayer.GetPlayerNumber() >= 0)
             {
-                SortedPlayers = PhotonNetwork.CurrentRoom.Players.Values.OrderBy((p) => p.GetPlayerNumber()).ToArray();
+                SortedPlayers = PhotonNetwork.CurrentRoomListItem.Players.Values.OrderBy((p) => p.GetPlayerNumber()).ToArray();
                 if (OnPlayerNumberingChanged != null)
                 {
                     OnPlayerNumberingChanged();
@@ -159,10 +159,10 @@ namespace Photon.Pun.UtilityScripts
 
                 if (player.IsLocal)
                 {
-					Debug.Log ("PhotonNetwork.CurrentRoom.PlayerCount = " + PhotonNetwork.CurrentRoom.PlayerCount);
+					Debug.Log ("PhotonNetwork.CurrentRoom.PlayerCount = " + PhotonNetwork.CurrentRoomListItem.PlayerCount);
 
                     // select a number
-                    for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
+                    for (int i = 0; i < PhotonNetwork.CurrentRoomListItem.PlayerCount; i++)
                     {
                         if (!usedInts.Contains(i))
                         {
@@ -189,7 +189,7 @@ namespace Photon.Pun.UtilityScripts
             //Debug.Log(allPlayers);
             //Debug.Log(PhotonNetwork.LocalPlayer.ToStringFull() + " has PhotonNetwork.player.GetPlayerNumber(): " + PhotonNetwork.LocalPlayer.GetPlayerNumber());
 
-            SortedPlayers = PhotonNetwork.CurrentRoom.Players.Values.OrderBy((p) => p.GetPlayerNumber()).ToArray();
+            SortedPlayers = PhotonNetwork.CurrentRoomListItem.Players.Values.OrderBy((p) => p.GetPlayerNumber()).ToArray();
             if (OnPlayerNumberingChanged != null)
             {
                 OnPlayerNumberingChanged();

@@ -61,9 +61,9 @@ namespace Photon.Pun
                 Protocol.Deserialize(out ID, memPlayer, ref off);
             }
 
-            if (PhotonNetwork.CurrentRoom != null)
+            if (PhotonNetwork.CurrentRoomListItem != null)
             {
-                Player player = PhotonNetwork.CurrentRoom.GetPlayer(ID);
+                Player player = PhotonNetwork.CurrentRoomListItem.GetPlayer(ID);
                 return player;
             }
             return null;

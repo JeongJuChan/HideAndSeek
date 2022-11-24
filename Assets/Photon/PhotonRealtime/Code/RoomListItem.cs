@@ -37,7 +37,7 @@ namespace Photon.Realtime
     ///
     /// Typically, this class should be extended by a game-specific implementation with logic and extra features.
     /// </remarks>
-    public class Room : RoomInfo
+    public class RoomListItem : RoomInfo
     {
         /// <summary>
         /// A reference to the LoadBalancingClient which is currently keeping the connection and state.
@@ -311,7 +311,7 @@ namespace Photon.Realtime
         /// <summary>Creates a Room (representation) with given name and properties and the "listing options" as provided by parameters.</summary>
         /// <param name="roomName">Name of the room (can be null until it's actually created on server).</param>
         /// <param name="options">Room options.</param>
-        public Room(string roomName, RoomOptions options, bool isOffline = false) : base(roomName, options != null ? options.CustomRoomProperties : null)
+        public RoomListItem(string roomName, RoomOptions options, bool isOffline = false) : base(roomName, options != null ? options.CustomRoomProperties : null)
         {
             // base() sets name and (custom)properties. here we set "well known" properties
             if (options != null)
@@ -461,7 +461,7 @@ namespace Photon.Realtime
         protected internal virtual void RemovePlayer(Player player)
         {
             this.Players.Remove(player.ActorNumber);
-            player.RoomReference = null;
+            player.RoomListItemReference = null;
         }
 
         /// <summary>
@@ -524,7 +524,7 @@ namespace Photon.Realtime
         public virtual Player StorePlayer(Player player)
         {
             this.Players[player.ActorNumber] = player;
-            player.RoomReference = this;
+            player.RoomListItemReference = this;
 
             //// while initializing the room, the players are not guaranteed to be added in-order
             //if (this.MasterClientId == 0 || player.ActorNumber < this.MasterClientId)

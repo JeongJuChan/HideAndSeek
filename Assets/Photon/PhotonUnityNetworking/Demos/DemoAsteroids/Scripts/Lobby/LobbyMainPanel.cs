@@ -269,8 +269,8 @@ namespace Photon.Pun.Demo.Asteroids
 
         public void OnStartGameButtonClicked()
         {
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-            PhotonNetwork.CurrentRoom.IsVisible = false;
+            PhotonNetwork.CurrentRoomListItem.IsOpen = false;
+            PhotonNetwork.CurrentRoomListItem.IsVisible = false;
 
             PhotonNetwork.LoadLevel("DemoAsteroids-GameScene");
         }

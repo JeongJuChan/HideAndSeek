@@ -20,11 +20,11 @@ namespace Photon.Pun.Demo.Cockpit
 
         void Update()
         {
-            if (PhotonNetwork.CurrentRoom != null)
+            if (PhotonNetwork.CurrentRoomListItem != null)
             {
-                if (PhotonNetwork.CurrentRoom.PlayerCount != _cache)
+                if (PhotonNetwork.CurrentRoomListItem.PlayerCount != _cache)
                 {
-                    _cache = PhotonNetwork.CurrentRoom.PlayerCount;
+                    _cache = PhotonNetwork.CurrentRoomListItem.PlayerCount;
                     Text.text = _cache.ToString();
                     this.OnValueChanged();
                 }

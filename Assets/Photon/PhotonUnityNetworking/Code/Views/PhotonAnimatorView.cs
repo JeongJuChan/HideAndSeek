@@ -131,7 +131,7 @@ namespace Photon.Pun
                 this.m_Animator.applyRootMotion = false;
             }
 
-            if (PhotonNetwork.InRoom == false || PhotonNetwork.CurrentRoom.PlayerCount <= 1)
+            if (PhotonNetwork.InRoom == false || PhotonNetwork.CurrentRoomListItem.PlayerCount <= 1)
             {
                 this.m_StreamQueue.Reset();
                 return;

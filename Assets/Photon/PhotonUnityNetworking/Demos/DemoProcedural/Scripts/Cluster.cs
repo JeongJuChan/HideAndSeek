@@ -133,7 +133,7 @@ namespace Photon.Pun.Demo.Procedural
             propertiesValue[blockId] = height;
 
             Hashtable properties = new Hashtable {{propertiesKey, propertiesValue}};
-            PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+            PhotonNetwork.CurrentRoomListItem.SetCustomProperties(properties);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Photon.Pun.Demo.Procedural
         private void RemoveClusterFromRoomProperties()
         {
             Hashtable properties = new Hashtable {{propertiesKey, null}};
-            PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+            PhotonNetwork.CurrentRoomListItem.SetCustomProperties(properties);
         }
 
         #endregion

@@ -22,12 +22,12 @@ namespace Photon.Pun.Demo.Cockpit
         void Update()
         {
 
-            if (PhotonNetwork.CurrentRoom != null)
+            if (PhotonNetwork.CurrentRoomListItem != null)
             {
-				if ((PhotonNetwork.CurrentRoom.IsOffline && _cache != 1) || (!PhotonNetwork.CurrentRoom.IsOffline && _cache != 0))
+				if ((PhotonNetwork.CurrentRoomListItem.IsOffline && _cache != 1) || (!PhotonNetwork.CurrentRoomListItem.IsOffline && _cache != 0))
                 {
-					_cache = PhotonNetwork.CurrentRoom.IsOffline ? 1 : 0;
-					Text.text = PhotonNetwork.CurrentRoom.IsOffline ? "true" : "false";
+					_cache = PhotonNetwork.CurrentRoomListItem.IsOffline ? 1 : 0;
+					Text.text = PhotonNetwork.CurrentRoomListItem.IsOffline ? "true" : "false";
                     this.OnValueChanged();
                 }
             }

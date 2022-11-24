@@ -324,7 +324,7 @@ namespace Photon.Realtime
 
         public void OnJoinedRoom()
         {
-            Debug.Log(this.GetFormattedTimestamp() + " SupportLogger OnJoinedRoom(" + this.client.CurrentRoom + "). " + this.client.CurrentLobby + " GameServer:" + this.client.GameServerAddress);
+            Debug.Log(this.GetFormattedTimestamp() + " SupportLogger OnJoinedRoom(" + this.client.CurrentRoomListItem + "). " + this.client.CurrentLobby + " GameServer:" + this.client.GameServerAddress);
         }
 
         public void OnJoinRoomFailed(short returnCode, string message)
@@ -339,7 +339,7 @@ namespace Photon.Realtime
 
         public void OnCreatedRoom()
         {
-            Debug.Log(this.GetFormattedTimestamp() + " SupportLogger OnCreatedRoom(" + this.client.CurrentRoom + "). " + this.client.CurrentLobby + " GameServer:" + this.client.GameServerAddress);
+            Debug.Log(this.GetFormattedTimestamp() + " SupportLogger OnCreatedRoom(" + this.client.CurrentRoomListItem + "). " + this.client.CurrentLobby + " GameServer:" + this.client.GameServerAddress);
         }
 
         public void OnLeftRoom()

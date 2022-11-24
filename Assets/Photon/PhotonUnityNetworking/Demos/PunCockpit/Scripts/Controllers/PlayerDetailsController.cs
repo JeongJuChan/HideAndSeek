@@ -97,7 +97,7 @@ namespace Photon.Pun.Demo.Cockpit
                 this.AddProperty(ParseKey(item.Key), item.Value.ToString(), this.CustomPropertiesPanel);
             }
 
-			MasterClientToolBar.SetActive(PhotonNetwork.CurrentRoom.PlayerCount>1 && PhotonNetwork.LocalPlayer.IsMasterClient);
+			MasterClientToolBar.SetActive(PhotonNetwork.CurrentRoomListItem.PlayerCount>1 && PhotonNetwork.LocalPlayer.IsMasterClient);
         }
 
         void AddProperty(string property, string value, Transform parent)

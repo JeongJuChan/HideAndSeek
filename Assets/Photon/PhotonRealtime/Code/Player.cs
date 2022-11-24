@@ -42,7 +42,7 @@ namespace Photon.Realtime
         /// <summary>
         /// Used internally to identify the masterclient of a room.
         /// </summary>
-        protected internal Room RoomReference { get; set; }
+        protected internal RoomListItem RoomListItemReference { get; set; }
 
 
         /// <summary>Backing field for property.</summary>
@@ -108,12 +108,12 @@ namespace Photon.Realtime
         {
             get
             {
-                if (this.RoomReference == null)
+                if (this.RoomListItemReference == null)
                 {
                     return false;
                 }
 
-                return this.ActorNumber == this.RoomReference.MasterClientId;
+                return this.ActorNumber == this.RoomListItemReference.MasterClientId;
             }
         }
 
@@ -176,12 +176,12 @@ namespace Photon.Realtime
         /// <returns>Player or null.</returns>
         public Player Get(int id)
         {
-            if (this.RoomReference == null)
+            if (this.RoomListItemReference == null)
             {
                 return null;
             }
 
-            return this.RoomReference.GetPlayer(id);
+            return this.RoomListItemReference.GetPlayer(id);
         }
 
         /// <summary>Gets this Player's next Player, as sorted by ActorNumber (Player.ID). Wraps around.</summary>
@@ -210,12 +210,12 @@ namespace Photon.Realtime
         /// <returns>Player or null.</returns>
         public Player GetNextFor(int currentPlayerId)
         {
-            if (this.RoomReference == null || this.RoomReference.Players == null || this.RoomReference.Players.Count < 2)
+            if (this.RoomListItemReference == null || this.RoomListItemReference.Players == null || this.RoomListItemReference.Players.Count < 2)
             {
                 return null;
             }
 
-            Dictionary<int, Player> players = this.RoomReference.Players;
+            Dictionary<int, Player> players = this.RoomListItemReference.Players;
             int nextHigherId = int.MaxValue;    // we look for the next higher ID
             int lowestId = currentPlayerId;     // if we are the player with the highest ID, there is no higher and we return to the lowest player's id
 
@@ -396,9 +396,9 @@ namespace Photon.Realtime
 
             Hashtable customProps = propertiesToSet.StripToStringKeys() as Hashtable;
 
-            if (this.RoomReference != null)
+            if (this.RoomListItemReference != null)
             {
-                if (this.RoomReference.IsOffline)
+                if (this.RoomListItemReference.IsOffline)
                 {
                     if (customProps.Count == 0)
                     {
@@ -407,7 +407,7 @@ namespace Photon.Realtime
                     this.CustomProperties.Merge(customProps);
                     this.CustomProperties.StripKeysWithNullValues();
                     // invoking callbacks
-                    this.RoomReference.LoadBalancingClient.InRoomCallbackTargets.OnPlayerPropertiesUpdate(this, customProps);
+                    this.RoomListItemReference.LoadBalancingClient.InRoomCallbackTargets.OnPlayerPropertiesUpdate(this, customProps);
                     return true;
                 }
                 else
@@ -415,7 +415,7 @@ namespace Photon.Realtime
                     Hashtable customPropsToCheck = expectedValues.StripToStringKeys() as Hashtable;
 
                     // send (sync) these new values if in online room
-                    return this.RoomReference.LoadBalancingClient.OpSetPropertiesOfActor(this.actorNumber, customProps, customPropsToCheck, webFlags);
+                    return this.RoomListItemReference.LoadBalancingClient.OpSetPropertiesOfActor(this.actorNumber, customProps, customPropsToCheck, webFlags);
                 }
             }
             if (this.IsLocal)
@@ -439,11 +439,11 @@ namespace Photon.Realtime
         /// <summary>Uses OpSetPropertiesOfActor to sync this player's NickName (server is being updated with this.NickName).</summary>
         private bool SetPlayerNameProperty()
         {
-            if (this.RoomReference != null && !this.RoomReference.IsOffline)
+            if (this.RoomListItemReference != null && !this.RoomListItemReference.IsOffline)
             {
                 Hashtable properties = new Hashtable();
                 properties[ActorProperties.PlayerName] = this.nickName;
-                return this.RoomReference.LoadBalancingClient.OpSetPropertiesOfActor(this.ActorNumber, properties);
+                return this.RoomListItemReference.LoadBalancingClient.OpSetPropertiesOfActor(this.ActorNumber, properties);
             }
 
             return false;

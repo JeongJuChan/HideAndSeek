@@ -148,7 +148,7 @@ namespace Photon.Pun.UtilityScripts
             startTimestamp = PhotonNetwork.ServerTimestamp;
 
             object startTimeFromProps;
-            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(CountdownStartTime, out startTimeFromProps))
+            if (PhotonNetwork.CurrentRoomListItem.CustomProperties.TryGetValue(CountdownStartTime, out startTimeFromProps))
             {
                 startTimestamp = (int)startTimeFromProps;
                 return true;
@@ -167,7 +167,7 @@ namespace Photon.Pun.UtilityScripts
             {
                 {CountdownTimer.CountdownStartTime, (int)PhotonNetwork.ServerTimestamp}
             };
-            PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+            PhotonNetwork.CurrentRoomListItem.SetCustomProperties(props);
 
 
             Debug.Log("Set Custom Props for Time: "+ props.ToStringFull() + " wasSet: "+wasSet);

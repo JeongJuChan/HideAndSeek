@@ -219,7 +219,7 @@ namespace Photon.Pun
 
                 Player prevOwner = this.Owner;
 
-                this.Owner = PhotonNetwork.CurrentRoom == null ? null : PhotonNetwork.CurrentRoom.GetPlayer(value, true);
+                this.Owner = PhotonNetwork.CurrentRoomListItem == null ? null : PhotonNetwork.CurrentRoomListItem.GetPlayer(value, true);
                 this.ownerActorNr = this.Owner != null ? this.Owner.ActorNumber : value;
 
                 this.AmOwner = PhotonNetwork.LocalPlayer != null && this.ownerActorNr == PhotonNetwork.LocalPlayer.ActorNumber;
@@ -246,7 +246,7 @@ namespace Photon.Pun
             {
                 Player prevController = this.Controller;
 
-                this.Controller = PhotonNetwork.CurrentRoom == null ? null : PhotonNetwork.CurrentRoom.GetPlayer(value, true);
+                this.Controller = PhotonNetwork.CurrentRoomListItem == null ? null : PhotonNetwork.CurrentRoomListItem.GetPlayer(value, true);
                 if (this.Controller != null && this.Controller.IsInactive)
                 {
                     this.Controller = PhotonNetwork.MasterClient;

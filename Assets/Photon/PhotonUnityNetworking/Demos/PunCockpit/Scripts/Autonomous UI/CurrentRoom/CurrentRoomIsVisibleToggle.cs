@@ -28,30 +28,30 @@ namespace Photon.Pun.Demo.Cockpit
 
 		void Update()
 		{
-			if (PhotonNetwork.CurrentRoom == null && _toggle.interactable)
+			if (PhotonNetwork.CurrentRoomListItem == null && _toggle.interactable)
 			{
 				_toggle.interactable = false;
 				
 			}
-			else if (PhotonNetwork.CurrentRoom != null && !_toggle.interactable)
+			else if (PhotonNetwork.CurrentRoomListItem != null && !_toggle.interactable)
 			{
 				_toggle.interactable = true;
 			}
 
-			if (PhotonNetwork.CurrentRoom!=null && PhotonNetwork.CurrentRoom.IsVisible != _toggle.isOn)
+			if (PhotonNetwork.CurrentRoomListItem!=null && PhotonNetwork.CurrentRoomListItem.IsVisible != _toggle.isOn)
 			{
-				Debug.Log("Update toggle : PhotonNetwork.CurrentRoom.IsVisible = " + PhotonNetwork.CurrentRoom.IsVisible, this);
-				_toggle.isOn = PhotonNetwork.CurrentRoom.IsVisible;
+				Debug.Log("Update toggle : PhotonNetwork.CurrentRoom.IsVisible = " + PhotonNetwork.CurrentRoomListItem.IsVisible, this);
+				_toggle.isOn = PhotonNetwork.CurrentRoomListItem.IsVisible;
 			}
 		}
 
 
 		public void ToggleValue(bool value)
 		{
-			if (PhotonNetwork.CurrentRoom != null)
+			if (PhotonNetwork.CurrentRoomListItem != null)
 			{
 				Debug.Log("PhotonNetwork.CurrentRoom.IsVisible = " + value, this);
-				PhotonNetwork.CurrentRoom.IsVisible = value;
+				PhotonNetwork.CurrentRoomListItem.IsVisible = value;
 			}
 
 			

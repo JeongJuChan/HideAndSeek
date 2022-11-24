@@ -22,12 +22,12 @@ namespace Photon.Pun.Demo.Cockpit
         void Update()
         {
 
-            if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.AutoCleanUp)
+            if (PhotonNetwork.CurrentRoomListItem != null && PhotonNetwork.CurrentRoomListItem.AutoCleanUp)
             {
-                if ((PhotonNetwork.CurrentRoom.AutoCleanUp && _cache != 1) || (!PhotonNetwork.CurrentRoom.AutoCleanUp && _cache != 0))
+                if ((PhotonNetwork.CurrentRoomListItem.AutoCleanUp && _cache != 1) || (!PhotonNetwork.CurrentRoomListItem.AutoCleanUp && _cache != 0))
                 {
-                    _cache = PhotonNetwork.CurrentRoom.AutoCleanUp ? 1 : 0;
-                    Text.text = PhotonNetwork.CurrentRoom.AutoCleanUp ? "true" : "false";
+                    _cache = PhotonNetwork.CurrentRoomListItem.AutoCleanUp ? 1 : 0;
+                    Text.text = PhotonNetwork.CurrentRoomListItem.AutoCleanUp ? "true" : "false";
                     this.OnValueChanged();
                 }
             }

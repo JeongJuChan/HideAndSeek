@@ -23,14 +23,14 @@ namespace Photon.Pun.Demo.Cockpit
 
         void Update()
         {
-            if (PhotonNetwork.CurrentRoom != null)
+            if (PhotonNetwork.CurrentRoomListItem != null)
             {
 
-                if (_cache == null || !PhotonNetwork.CurrentRoom.PropertiesListedInLobby.SequenceEqual(_cache))
+                if (_cache == null || !PhotonNetwork.CurrentRoomListItem.PropertiesListedInLobby.SequenceEqual(_cache))
                 {
 
-                    _cache = PhotonNetwork.CurrentRoom.PropertiesListedInLobby.Clone() as string[];
-                    Text.text = string.Join("\n", PhotonNetwork.CurrentRoom.PropertiesListedInLobby);
+                    _cache = PhotonNetwork.CurrentRoomListItem.PropertiesListedInLobby.Clone() as string[];
+                    Text.text = string.Join("\n", PhotonNetwork.CurrentRoomListItem.PropertiesListedInLobby);
                     this.OnValueChanged();
                 }
             }

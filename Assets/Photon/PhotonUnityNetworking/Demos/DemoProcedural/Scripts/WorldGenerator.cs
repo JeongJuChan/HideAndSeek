@@ -146,7 +146,7 @@ namespace Photon.Pun.Demo.Procedural
                 {WorldTypePropertiesKey, (int) WorldType}
             };
 
-            PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+            PhotonNetwork.CurrentRoomListItem.SetCustomProperties(properties);
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace Photon.Pun.Demo.Procedural
             }
 
             // Applying modifications made to the world when joining the room later or while it is created
-            foreach (DictionaryEntry entry in PhotonNetwork.CurrentRoom.CustomProperties)
+            foreach (DictionaryEntry entry in PhotonNetwork.CurrentRoomListItem.CustomProperties)
             {
                 if (entry.Value == null)
                 {

@@ -22,7 +22,7 @@ namespace Photon.Pun.Demo.Cockpit
         void Update()
         {
 
-            if (PhotonNetwork.CurrentRoom == null || PhotonNetwork.CurrentRoom.ExpectedUsers == null)
+            if (PhotonNetwork.CurrentRoomListItem == null || PhotonNetwork.CurrentRoomListItem.ExpectedUsers == null)
             {
                 if (_cache != null)
                 {
@@ -34,20 +34,20 @@ namespace Photon.Pun.Demo.Cockpit
 
             }
 
-            if (_cache == null || (PhotonNetwork.CurrentRoom.ExpectedUsers != null && !PhotonNetwork.CurrentRoom.ExpectedUsers.SequenceEqual(_cache)))
+            if (_cache == null || (PhotonNetwork.CurrentRoomListItem.ExpectedUsers != null && !PhotonNetwork.CurrentRoomListItem.ExpectedUsers.SequenceEqual(_cache)))
             {
 
-                Text.text = string.Join("\n", PhotonNetwork.CurrentRoom.ExpectedUsers);
+                Text.text = string.Join("\n", PhotonNetwork.CurrentRoomListItem.ExpectedUsers);
 
                 this.OnValueChanged();
 
                 return;
             }
 
-            if (PhotonNetwork.CurrentRoom.ExpectedUsers == null && _cache != null)
+            if (PhotonNetwork.CurrentRoomListItem.ExpectedUsers == null && _cache != null)
             {
 
-                Text.text = string.Join("\n", PhotonNetwork.CurrentRoom.ExpectedUsers);
+                Text.text = string.Join("\n", PhotonNetwork.CurrentRoomListItem.ExpectedUsers);
 
                 this.OnValueChanged();
 

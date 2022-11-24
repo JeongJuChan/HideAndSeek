@@ -430,7 +430,7 @@ namespace Photon.Pun.Demo.Cockpit
         public void SetRoomCustomProperty(string value)
         {
 			if (debug) Debug.Log("PunCockpit:SetRoomCustomProperty() c0 = " + value);
-            PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "C0", value } });
+            PhotonNetwork.CurrentRoomListItem.SetCustomProperties(new Hashtable() { { "C0", value } });
         }
 
         private string roomNameToEnter;

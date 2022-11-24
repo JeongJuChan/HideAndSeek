@@ -1,14 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
 
 public class PlayfabLogin : MonoBehaviour
 {
-    const string TITLE_ID = "E35EF";
-
     [SerializeField] string _userName;
+    
+    PhotonConnector _photonConnector;
+
+    const string TITLE_ID = "E35EF";
     #region Unity Methods
 
     void Start()
@@ -17,6 +17,7 @@ public class PlayfabLogin : MonoBehaviour
         {
             PlayFabSettings.TitleId = TITLE_ID;
         }
+        _photonConnector = FindObjectOfType<PhotonConnector>();
     }
 
     #endregion
@@ -26,8 +27,9 @@ public class PlayfabLogin : MonoBehaviour
     public void SetUserName(string userName)
     {
         _userName = userName;
-        PlayerPrefs.SetString(Define.UserAuth.UserName.ToString(), userName);
+        PlayerPrefs.SetString(Define.UserAuth.UserName.ToString(), _userName);
     }
+
 
     public void Login()
     {
@@ -74,7 +76,7 @@ public class PlayfabLogin : MonoBehaviour
     void OnUpdateUserTitleNameSuccess(UpdateUserTitleDisplayNameResult result)
     {
         Debug.Log($"OnUpdateUserTitleNameSuccess : {result}");
-        Manager.Scene.LoadScene(Define.SceneName.LobbyScene.ToString());
+        _photonConnector.ConnectToPhoton();
     }
 
     void OnPlayfabError(PlayFabError error)

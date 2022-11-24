@@ -45,14 +45,14 @@ namespace Photon.Pun.Demo.Cockpit
 
             UpdateStatusText.text = string.Empty;
 
-            if (PhotonNetwork.CurrentRoom == null)
+            if (PhotonNetwork.CurrentRoomListItem == null)
             {
                 return;
             }
 
             RefreshCount();
 
-            foreach (KeyValuePair<int, Player> _entry in PhotonNetwork.CurrentRoom.Players)
+            foreach (KeyValuePair<int, Player> _entry in PhotonNetwork.CurrentRoomListItem.Players)
             {
                 if (playerCellList.ContainsKey(_entry.Key))
                 {
@@ -95,7 +95,7 @@ namespace Photon.Pun.Demo.Cockpit
 
         public override void OnMasterClientSwitched(Player newMasterClient)
         {
-            foreach (KeyValuePair<int, Player> _entry in PhotonNetwork.CurrentRoom.Players)
+            foreach (KeyValuePair<int, Player> _entry in PhotonNetwork.CurrentRoomListItem.Players)
             {
                 playerCellList[_entry.Key].RefreshInfo(null);
             }
@@ -152,9 +152,9 @@ namespace Photon.Pun.Demo.Cockpit
 
         void RefreshCount()
         {
-            if (PhotonNetwork.CurrentRoom != null)
+            if (PhotonNetwork.CurrentRoomListItem != null)
             {
-                PlayerCountsText.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString("00");
+                PlayerCountsText.text = PhotonNetwork.CurrentRoomListItem.PlayerCount.ToString("00");
             }
 
         }

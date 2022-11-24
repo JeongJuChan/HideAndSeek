@@ -654,7 +654,7 @@ namespace Photon.Realtime
         }
 
         /// <summary>The current room this client is connected to (null if none available).</summary>
-        public Room CurrentRoom { get; set; }
+        public RoomListItem CurrentRoomListItem { get; set; }
 
 
         /// <summary>Is true while being in a room (this.state == ClientState.Joined).</summary>
@@ -667,7 +667,7 @@ namespace Photon.Realtime
         {
             get
             {
-                return this.state == ClientState.Joined && this.CurrentRoom != null;
+                return this.state == ClientState.Joined && this.CurrentRoomListItem != null;
             }
         }
 
@@ -2019,7 +2019,7 @@ namespace Photon.Realtime
                 return false;
             }
 
-            if (this.CurrentRoom == null)
+            if (this.CurrentRoomListItem == null)
             {
                 // if you attempt to set this player's values without conditions, then fine:
                 if (expectedProperties == null && webFlags == null && this.LocalPlayer != null && this.LocalPlayer.ActorNumber == actorNr)
@@ -2060,9 +2060,9 @@ namespace Photon.Realtime
                 return false;
             }
             bool res = this.LoadBalancingPeer.OpSetPropertiesOfActor(actorNr, actorProperties, expectedProperties, webFlags);
-            if (res && !this.CurrentRoom.BroadcastPropertiesChangeToAll && (expectedProperties == null || expectedProperties.Count == 0))
+            if (res && !this.CurrentRoomListItem.BroadcastPropertiesChangeToAll && (expectedProperties == null || expectedProperties.Count == 0))
             {
-                Player target = this.CurrentRoom.GetPlayer(actorNr);
+                Player target = this.CurrentRoomListItem.GetPlayer(actorNr);
                 if (target != null)
                 {
                     target.InternalCacheProperties(actorProperties);
@@ -2158,9 +2158,9 @@ namespace Photon.Realtime
                 return false;
             }
             bool res = this.LoadBalancingPeer.OpSetPropertiesOfRoom(gameProperties, expectedProperties, webFlags);
-            if (res && !this.CurrentRoom.BroadcastPropertiesChangeToAll && (expectedProperties == null || expectedProperties.Count == 0))
+            if (res && !this.CurrentRoomListItem.BroadcastPropertiesChangeToAll && (expectedProperties == null || expectedProperties.Count == 0))
             {
-                this.CurrentRoom.InternalCacheProperties(gameProperties);
+                this.CurrentRoomListItem.InternalCacheProperties(gameProperties);
                 this.InRoomCallbackTargets.OnRoomPropertiesUpdate(gameProperties);
             }
             return res;
@@ -2222,9 +2222,9 @@ namespace Photon.Realtime
         private void ReadoutProperties(Hashtable gameProperties, Hashtable actorProperties, int targetActorNr)
         {
             // read game properties and cache them locally
-            if (this.CurrentRoom != null && gameProperties != null)
+            if (this.CurrentRoomListItem != null && gameProperties != null)
             {
-                this.CurrentRoom.InternalCacheProperties(gameProperties);
+                this.CurrentRoomListItem.InternalCacheProperties(gameProperties);
                 if (this.InRoom)
                 {
                     this.InRoomCallbackTargets.OnRoomPropertiesUpdate(gameProperties);
@@ -2237,7 +2237,7 @@ namespace Photon.Realtime
                 {
                     // we have a single entry in the actorProperties with one user's name
                     // targets MUST exist before you set properties
-                    Player target = this.CurrentRoom.GetPlayer(targetActorNr);
+                    Player target = this.CurrentRoomListItem.GetPlayer(targetActorNr);
                     if (target != null)
                     {
                         Hashtable props = this.ReadoutPropertiesForActorNr(actorProperties, targetActorNr);
@@ -2265,11 +2265,11 @@ namespace Photon.Realtime
                         props = (Hashtable)actorProperties[key];
                         newName = (string)props[ActorProperties.PlayerName];
 
-                        target = this.CurrentRoom.GetPlayer(actorNr);
+                        target = this.CurrentRoomListItem.GetPlayer(actorNr);
                         if (target == null)
                         {
                             target = this.CreatePlayer(newName, actorNr, false, props);
-                            this.CurrentRoom.StorePlayer(target);
+                            this.CurrentRoomListItem.StorePlayer(target);
                         }
                         target.InternalCacheProperties(props);
                     }
@@ -2299,25 +2299,25 @@ namespace Photon.Realtime
         {
             if (this.LocalPlayer == null)
             {
-                this.DebugReturn(DebugLevel.WARNING, string.Format("Local actor is null or not in mActors! mLocalActor: {0} mActors==null: {1} newID: {2}", this.LocalPlayer, this.CurrentRoom.Players == null, newID));
+                this.DebugReturn(DebugLevel.WARNING, string.Format("Local actor is null or not in mActors! mLocalActor: {0} mActors==null: {1} newID: {2}", this.LocalPlayer, this.CurrentRoomListItem.Players == null, newID));
             }
 
-            if (this.CurrentRoom == null)
+            if (this.CurrentRoomListItem == null)
             {
                 // change to new actor/player ID and make sure the player does not have a room reference left
                 this.LocalPlayer.ChangeLocalID(newID);
-                this.LocalPlayer.RoomReference = null;
+                this.LocalPlayer.RoomListItemReference = null;
             }
             else
             {
                 // remove old actorId from actor list
-                this.CurrentRoom.RemovePlayer(this.LocalPlayer);
+                this.CurrentRoomListItem.RemovePlayer(this.LocalPlayer);
 
                 // change to new actor/player ID
                 this.LocalPlayer.ChangeLocalID(newID);
 
                 // update the room's list with the new reference
-                this.CurrentRoom.StorePlayer(this.LocalPlayer);
+                this.CurrentRoomListItem.StorePlayer(this.LocalPlayer);
             }
         }
 
@@ -2333,8 +2333,8 @@ namespace Photon.Realtime
         /// <param name="operationResponse">Contains the server's response for an operation called by this peer.</param>
         private void GameEnteredOnGameServer(OperationResponse operationResponse)
         {
-            this.CurrentRoom = this.CreateRoom(this.enterRoomParamsCache.RoomName, this.enterRoomParamsCache.RoomOptions);
-            this.CurrentRoom.LoadBalancingClient = this;
+            this.CurrentRoomListItem = this.CreateRoom(this.enterRoomParamsCache.RoomName, this.enterRoomParamsCache.RoomOptions);
+            this.CurrentRoomListItem.LoadBalancingClient = this;
 
             // first change the local id, instead of first updating the actorList since actorList uses ID to update itself
 
@@ -2356,7 +2356,7 @@ namespace Photon.Realtime
             object temp;
             if (operationResponse.Parameters.TryGetValue(ParameterCode.RoomOptionFlags, out temp))
             {
-                this.CurrentRoom.InternalCacheRoomFlags((int)temp);
+                this.CurrentRoomListItem.InternalCacheRoomFlags((int)temp);
             }
 
             this.State = ClientState.Joined;
@@ -2364,7 +2364,7 @@ namespace Photon.Realtime
 
             // the callbacks OnCreatedRoom and OnJoinedRoom are called in the event join. it contains important info about the room and players.
             // unless there will be no room events (RoomOptions.SuppressRoomEvents = true)
-            if (this.CurrentRoom.SuppressRoomEvents)
+            if (this.CurrentRoomListItem.SuppressRoomEvents)
             {
                 if (this.lastJoinType == JoinType.CreateRoom || (this.lastJoinType == JoinType.JoinOrCreateRoom && this.LocalPlayer.ActorNumber == 1))
                 {
@@ -2387,10 +2387,10 @@ namespace Photon.Realtime
                         continue;
                     }
 
-                    Player target = this.CurrentRoom.GetPlayer(actorNumber);
+                    Player target = this.CurrentRoomListItem.GetPlayer(actorNumber);
                     if (target == null)
                     {
-                        this.CurrentRoom.StorePlayer(this.CreatePlayer(string.Empty, actorNumber, false, null));
+                        this.CurrentRoomListItem.StorePlayer(this.CreatePlayer(string.Empty, actorNumber, false, null));
                     }
                 }
             }
@@ -2411,9 +2411,9 @@ namespace Photon.Realtime
         }
 
         /// <summary>Internal "factory" method to create a room-instance.</summary>
-        protected internal virtual Room CreateRoom(string roomName, RoomOptions opt)
+        protected internal virtual RoomListItem CreateRoom(string roomName, RoomOptions opt)
         {
-            Room r = new Room(roomName, opt);
+            RoomListItem r = new RoomListItem(roomName, opt);
             return r;
         }
 
@@ -3041,8 +3041,8 @@ namespace Photon.Realtime
                     // disconnect due to connection exception is handled below (don't connect to GS or master in that case)
                     this.friendListRequested = null;
 
-                    bool wasInRoom = this.CurrentRoom != null;
-                    this.CurrentRoom = null;    // players get cleaned up inside this, too, except LocalPlayer (which we keep)
+                    bool wasInRoom = this.CurrentRoomListItem != null;
+                    this.CurrentRoomListItem = null;    // players get cleaned up inside this, too, except LocalPlayer (which we keep)
                     this.ChangeLocalID(-1);     // depends on this.CurrentRoom, so it must be called after updating that
 
                     if (this.Server == ServerConnection.GameServer && wasInRoom)
@@ -3182,7 +3182,7 @@ namespace Photon.Realtime
         public virtual void OnEvent(EventData photonEvent)
         {
             int actorNr = photonEvent.Sender;
-            Player originatingPlayer = (this.CurrentRoom != null) ? this.CurrentRoom.GetPlayer(actorNr) : null;
+            Player originatingPlayer = (this.CurrentRoomListItem != null) ? this.CurrentRoomListItem.GetPlayer(actorNr) : null;
 
             switch (photonEvent.Code)
             {
@@ -3208,7 +3208,7 @@ namespace Photon.Realtime
                         if (actorNr > 0)
                         {
                             originatingPlayer = this.CreatePlayer(string.Empty, actorNr, false, actorProperties);
-                            this.CurrentRoom.StorePlayer(originatingPlayer);
+                            this.CurrentRoomListItem.StorePlayer(originatingPlayer);
                         }
                     }
                     else
@@ -3257,7 +3257,7 @@ namespace Photon.Realtime
                         else
                         {
                             originatingPlayer.IsInactive = false;
-                            this.CurrentRoom.RemovePlayer(actorNr);
+                            this.CurrentRoomListItem.RemovePlayer(actorNr);
                         }
                     }
 
@@ -3266,8 +3266,8 @@ namespace Photon.Realtime
                         int newMaster = (int)photonEvent[ParameterCode.MasterClientId];
                         if (newMaster != 0)
                         {
-                            this.CurrentRoom.masterClientId = newMaster;
-                            this.InRoomCallbackTargets.OnMasterClientSwitched(this.CurrentRoom.GetPlayer(newMaster));
+                            this.CurrentRoomListItem.masterClientId = newMaster;
+                            this.InRoomCallbackTargets.OnMasterClientSwitched(this.CurrentRoomListItem.GetPlayer(newMaster));
                         }
                     }
                     // finally, send notification that a player left

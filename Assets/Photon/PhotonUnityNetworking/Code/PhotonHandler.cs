@@ -289,7 +289,7 @@ namespace Photon.Pun
             var views = PhotonNetwork.PhotonViewCollection;
 
             bool amMasterClient = PhotonNetwork.IsMasterClient;
-            bool amRejoiningMaster = amMasterClient && PhotonNetwork.CurrentRoom.PlayerCount > 1;
+            bool amRejoiningMaster = amMasterClient && PhotonNetwork.CurrentRoomListItem.PlayerCount > 1;
 
             if (amRejoiningMaster)
                 reusableIntList.Clear();
@@ -384,7 +384,7 @@ namespace Photon.Pun
             // HARD DISCONNECT: Player permanently removed. Remove that actor as owner for all items they created (Unless AutoCleanUp is false)
             else
             {
-                bool autocleanup = PhotonNetwork.CurrentRoom.AutoCleanUp;
+                bool autocleanup = PhotonNetwork.CurrentRoomListItem.AutoCleanUp;
 
                 foreach (var view in views)
                 {
