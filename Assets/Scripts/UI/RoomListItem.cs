@@ -22,11 +22,6 @@ public class RoomListItem : MonoBehaviour
         _text.text = $"{info.Name} ({info.PlayerCount}/{info.MaxPlayers})";
     }
 
-    public void SetRoomInfo()
-    {
-        
-    }
-
     public void OnClickJoinRoomButton()
     {
         _photonConnector.JoinRoom(Info.Name);

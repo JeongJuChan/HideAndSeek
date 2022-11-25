@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Realtime;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LobbyUI : MonoBehaviour
@@ -12,7 +13,9 @@ public class LobbyUI : MonoBehaviour
     [SerializeField] GameObject _lodingText;
     [SerializeField] GameObject _RoomPanel;
     [SerializeField] RoomListItem _roomListItem;
+    [SerializeField] PlayerListItem _playerListItem;
     [SerializeField] Transform _roomContent;
+    [SerializeField] Transform _playerListUI;
     [SerializeField] TMP_InputField _roomInputField;
     [SerializeField] TMP_Text _nickNameText;
     [SerializeField] TMP_Text _roomInfoText;
@@ -68,20 +71,39 @@ public class LobbyUI : MonoBehaviour
         _photonConnector.Disconnect();
     }
 
-    public void OnClickJoinRoom()
+    public void OnClickReadyButton()
     {
-        
+        Debug.Log("OnClickReadyButton");
+        _photonConnector.ChangeReadyState();
     }
 
-    public RoomListItem CreateRoomListUI()
+    public RoomListItem CreateAndGetRoomListItem()
     {
         RoomListItem roomListItem = Instantiate(_roomListItem, _roomContent);
         return roomListItem;
     }
-
-    public void OnReady()
+    
+    public void UpdateRoomInfoUI(Photon.Realtime.RoomListItem item)
     {
-        
+        Debug.Log($"SetRoomInfo : {item.Name}\n({item.PlayerCount}/{item.MaxPlayers}");
+        _roomInfoText.text = $"{item.Name}\n({item.PlayerCount}/{item.MaxPlayers})";
+    }
+
+    public PlayerListItem CreateAndGetPlayerListItem()
+    {
+        PlayerListItem playerListItem = Instantiate(_playerListItem, _playerListUI);
+        return playerListItem;
+    }
+
+    public void OnReadyProperty(PlayerListItem playerListItem, bool isActive)
+    {
+        playerListItem.SetReadyState(isActive);
+    }
+
+    public void OnClickExitButton()
+    {
+        _RoomPanel.SetActive(false);
+        _photonConnector.LeaveRoom();
     }
 
     #endregion
@@ -93,9 +115,5 @@ public class LobbyUI : MonoBehaviour
     #endregion
 
 
-    public void UpdateRoomInfoUI(Photon.Realtime.RoomListItem item)
-    {
-        Debug.Log($"SetRoomInfo : {item.Name}\n({item.PlayerCount}/{item.MaxPlayers}");
-        _roomInfoText.text = $"{item.Name}\n({item.PlayerCount}/{item.MaxPlayers})";
-    }
+    
 }

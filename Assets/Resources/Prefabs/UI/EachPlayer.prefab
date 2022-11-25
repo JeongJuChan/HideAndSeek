@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 3700189778481861167}
   - component: {fileID: 3700189778481861164}
   - component: {fileID: 3700189778481861165}
+  - component: {fileID: 7272454760453604229}
   m_Layer: 5
   m_Name: EachPlayer
   m_TagString: Untagged
@@ -181,6 +182,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &7272454760453604229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3700189778481861163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90b496f674d57cc418898dfdda0b4068, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _nameText: {fileID: 3700189778981842171}
+  _readyCheck: {fileID: 3700189777725734969}
 --- !u!1 &3700189778981842169
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,12 +289,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 77.8
+  m_fontSize: 60
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 10
-  m_fontSizeMax: 80
+  m_fontSizeMax: 60
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -313,6 +328,6 @@ MonoBehaviour:
   m_margin: {x: -2.9735107, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
