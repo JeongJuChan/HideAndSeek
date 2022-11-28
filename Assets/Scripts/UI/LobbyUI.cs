@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Photon.Realtime;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class LobbyUI : MonoBehaviour
@@ -12,6 +10,8 @@ public class LobbyUI : MonoBehaviour
     [SerializeField] GameObject _LobbyPanel;
     [SerializeField] GameObject _lodingText;
     [SerializeField] GameObject _RoomPanel;
+    [SerializeField] GameObject _readyButton;
+    [SerializeField] GameObject _startButton;
     [SerializeField] RoomListItem _roomListItem;
     [SerializeField] PlayerListItem _playerListItem;
     [SerializeField] Transform _roomContent;
@@ -104,6 +104,18 @@ public class LobbyUI : MonoBehaviour
     {
         _RoomPanel.SetActive(false);
         _photonConnector.LeaveRoom();
+    }
+
+    public void SettingMasterInRoom(bool isMasterClient)
+    {
+        _readyButton.SetActive(!isMasterClient);
+        _startButton.SetActive(isMasterClient);
+    }
+
+    public void OnClickStartButton()
+    {
+        
+        _photonConnector.CloseRoom();
     }
 
     #endregion

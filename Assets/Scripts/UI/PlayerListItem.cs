@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerListItem : MonoBehaviour
 {
@@ -10,8 +12,10 @@ public class PlayerListItem : MonoBehaviour
     
     [SerializeField] TMP_Text _nameText;
     [SerializeField] GameObject _readyCheck;
+    [SerializeField] GameObject _masterIcon;
+    [SerializeField] Image _image;
 
-    public bool IsActive { get; private set; }
+    public bool IsReadyActive { get; private set; }
 
     public void SetPlayerInfo(Player player)
     {
@@ -22,15 +26,24 @@ public class PlayerListItem : MonoBehaviour
     public void SetCurrentReadyState()
     {
         Debug.Log("SetCurrentReadyState");
-        _readyCheck.SetActive(IsActive);
+        _readyCheck.SetActive(IsReadyActive);
     }
-
 
     public void SetReadyState(bool isActive)
     {
         Debug.Log($"SetReadyState : {isActive}");
-        IsActive = isActive;
-        _readyCheck.SetActive(IsActive);
+        IsReadyActive = isActive;
+        _readyCheck.SetActive(IsReadyActive);
+    }
+
+    public void ActiveMasterIcon()
+    {
+        _masterIcon.SetActive(true);
+    }
+
+    public void SetLocalPlayerColor()
+    {
+        _image.color = Color.yellow;
     }
     
 }

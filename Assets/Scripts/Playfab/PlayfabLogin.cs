@@ -30,7 +30,6 @@ public class PlayfabLogin : MonoBehaviour
         PlayerPrefs.SetString(Define.UserAuth.UserName.ToString(), _userName);
     }
 
-
     public void Login()
     {
         // 이름이 유효한지 체크
@@ -62,6 +61,19 @@ public class PlayfabLogin : MonoBehaviour
         var request = new UpdateUserTitleDisplayNameRequest { DisplayName = _userName };
         PlayFabClientAPI.UpdateUserTitleDisplayName(request, OnUpdateUserTitleNameSuccess, OnPlayfabError);
     }
+    
+    // TODO : Destroy
+    void LoginRewardRequest(string currency)
+    {
+        var request = new ExecuteCloudScriptRequest()
+        {
+            FunctionName = "AddCurrency",
+            FunctionParameter = new { text = currency },
+            GeneratePlayStreamEvent = true
+        };
+        
+        PlayFabClientAPI.ExecuteCloudScript(request, result => { Debug.Log("ExecuteCloudScriptSuccessed");}, error => { Debug.LogError("ExecuteCloudScriptError");});
+    }
 
     #endregion
 
@@ -71,6 +83,7 @@ public class PlayfabLogin : MonoBehaviour
     {
         Debug.Log($"Login with CustomId Succeed {result}" );
         UpdateDisplayName();
+        LoginRewardRequest("KR");
     }
     
     void OnUpdateUserTitleNameSuccess(UpdateUserTitleDisplayNameResult result)
