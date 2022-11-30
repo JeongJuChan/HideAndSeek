@@ -52,7 +52,7 @@ public class PlayerController : BaseController
 
     protected override void Jump()
     {
-        _VerticalVelocity += new Vector3(0f, Mathf.Sqrt(-2 * Physics.gravity.y * jumpPower), 0f);
+        _VerticalVelocity.y += Mathf.Sqrt(-2 * Physics.gravity.y * jumpPower);
     }
 
     #endregion
@@ -65,7 +65,7 @@ public class PlayerController : BaseController
             QueryTriggerInteraction.Ignore);
         if (isGrounded && _VerticalVelocity.y < 0)
             _VerticalVelocity.y = 0f;
-        
+
         _VerticalVelocity.y += Physics.gravity.y * Time.deltaTime;
         _characterController.Move(_VerticalVelocity * Time.deltaTime);
     }

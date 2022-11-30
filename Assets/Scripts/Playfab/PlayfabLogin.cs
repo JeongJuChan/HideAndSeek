@@ -24,7 +24,7 @@ public class PlayfabLogin : MonoBehaviour
 
     #region Public Methods
 
-    public void SetUserName(string userName)
+    public void SetPlayerName(string userName)
     {
         _userName = userName;
         PlayerPrefs.SetString(Define.UserAuth.UserName.ToString(), _userName);

@@ -701,8 +701,8 @@ MonoBehaviour:
   m_OnDeselect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1714790334}
-        m_TargetAssemblyTypeName: PlayfabLogin, Assembly-CSharp
+      - m_Target: {fileID: 1652012504}
+        m_TargetAssemblyTypeName: LobbyUI, Assembly-CSharp
         m_MethodName: SetUserName
         m_Mode: 0
         m_Arguments:
@@ -3660,6 +3660,7 @@ MonoBehaviour:
   _LoginPanel: {fileID: 1247243353}
   _LobbyPanel: {fileID: 1688263506}
   _lodingText: {fileID: 1451201765}
+  _logInInputField: {fileID: 195851244}
   _RoomPanel: {fileID: 1083648794}
   _readyButton: {fileID: 1155575347}
   _startButton: {fileID: 223974226}

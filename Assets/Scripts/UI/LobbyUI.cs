@@ -9,6 +9,7 @@ public class LobbyUI : MonoBehaviour
     [SerializeField] GameObject _LoginPanel;
     [SerializeField] GameObject _LobbyPanel;
     [SerializeField] GameObject _lodingText;
+    [SerializeField] TMP_InputField _logInInputField;
     [SerializeField] GameObject _RoomPanel;
     [SerializeField] GameObject _readyButton;
     [SerializeField] GameObject _startButton;
@@ -21,6 +22,7 @@ public class LobbyUI : MonoBehaviour
     [SerializeField] TMP_Text _roomInfoText;
 
     PhotonConnector _photonConnector;
+    PlayfabLogin _playfabLogin;
     string _roomName;
 
     #region Unity Methods
@@ -28,6 +30,7 @@ public class LobbyUI : MonoBehaviour
     void Start()
     {
         _photonConnector = FindObjectOfType<PhotonConnector>();
+        _playfabLogin = FindObjectOfType<PlayfabLogin>();
         _LoginPanel.SetActive(true);
     }
     
@@ -53,6 +56,11 @@ public class LobbyUI : MonoBehaviour
         _roomName = roomName;
     }
 
+    public void SetUserName(string userName)
+    {
+        _playfabLogin.SetPlayerName(userName);
+    }
+
     public void OnClickCreateRoomButton()
     {
         _photonConnector.CreateRoom(_roomName);
@@ -68,6 +76,7 @@ public class LobbyUI : MonoBehaviour
     {
         _LobbyPanel.SetActive(false);
         _LoginPanel.SetActive(true);
+        _logInInputField.text = String.Empty;
         _photonConnector.Disconnect();
     }
 
@@ -110,6 +119,7 @@ public class LobbyUI : MonoBehaviour
     {
         _readyButton.SetActive(!isMasterClient);
         _startButton.SetActive(isMasterClient);
+        
     }
 
     public void OnClickStartButton()

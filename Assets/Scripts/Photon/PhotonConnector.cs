@@ -115,8 +115,6 @@ public class PhotonConnector : MonoBehaviourPunCallbacks
     #endregion
 
     #region Private Methods
-    // 자신이 들어왔을 때
-    
     
     void UpdateRoomList(List<RoomInfo> roomList)
     {
@@ -129,7 +127,9 @@ public class PhotonConnector : MonoBehaviourPunCallbacks
             {
                 if (_roomList.Count > 0)
                 {
-                    Debug.Log("RemoveRoom");
+                    Debug.Log($"_roomList.Count : {_roomList.Count}");
+                    Debug.Log($"index : {index}");
+                    Debug.Log($"RemoveRoom");
                     Destroy(_roomList[index].gameObject);
                     _roomList.RemoveAt(index);
                 }
@@ -288,7 +288,6 @@ public class PhotonConnector : MonoBehaviourPunCallbacks
         _lobbyUI.UpdateRoomInfoUI(PhotonNetwork.CurrentRoomListItem);
         _lobbyUI.SettingMasterInRoom(PhotonNetwork.IsMasterClient);
         UpdatePlayerList();
-        
     }
 
     public override void OnLeftRoom()
@@ -312,6 +311,16 @@ public class PhotonConnector : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
+        foreach (PlayerListItem playerListItem in _playerList)
+        {
+            if (playerListItem.PlayerItem.Equals(newMasterClient))
+            {
+                _hashtable = newMasterClient.CustomProperties;
+                _hashtable[READY_KEY] = false;
+                playerListItem.PlayerItem.SetCustomProperties(_hashtable);
+            }
+        }
+
         _lobbyUI.SettingMasterInRoom(PhotonNetwork.IsMasterClient);
     }
 

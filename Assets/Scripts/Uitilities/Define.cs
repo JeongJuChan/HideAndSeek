@@ -17,4 +17,11 @@ public class Define
         LobbyScene,
         MainScene,
     }
+
+    public enum ColliderType
+    {
+        BoxCollider,
+        CapsuleCollider,
+        MeshCollider
+    }
 }
