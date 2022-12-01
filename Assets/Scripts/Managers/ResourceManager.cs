@@ -23,7 +23,7 @@ public class ResourceManager
         return Resources.Load<T>(path);
     }
 
-    public List<T> LoadAll<T>(string path) where T : Object
+    public T[] LoadAll<T>(string path) where T : Object
     {
         if (typeof(T) == typeof(GameObject))
         {
@@ -36,9 +36,9 @@ public class ResourceManager
         }
         // 풀 안에 이름 있는지 확인 후 있으면 return ~
         
-        // 아니면 리스트 생성 후 반환
-        List<T> list = new List<T>(Resources.LoadAll<T>(path));
-        return list;
+        // 아니면 배열 생성 후 반환
+        T[] array = Resources.LoadAll<T>(path);
+        return array;
     }
 
     public GameObject Instantiate(string path, Transform parent = null)
@@ -53,11 +53,10 @@ public class ResourceManager
         
         // 풀링된 게 있으면 꺼내주기
         // return ~
-
+        // if (Manager.Pool.)
         // 아니면 새로 생성해서 주기
         GameObject go = Object.Instantiate(original, parent);
         go.name = original.name;
-
         return go;
     }
 
