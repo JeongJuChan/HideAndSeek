@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PoolTest : MonoBehaviour
 {
-    void Start()
+    void Awake()
     {
         Manager.Pool.CreatePool();
     }

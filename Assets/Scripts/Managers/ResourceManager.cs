@@ -17,7 +17,6 @@ public class ResourceManager
                 name = name.Substring(index + 1);
             }
             // 풀매니저 들어갈 곳
-            
         }
 
         return Resources.Load<T>(path);

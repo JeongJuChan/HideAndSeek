@@ -2,18 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayerChooser : MonoBehaviour
 {
     [SerializeField] Transform _modelTransform;
-
+    [SerializeField] int[] _counts;
+    
     GameObject _currentModel;
     
     #region Unity Methods
 
     void Start()
     {
-        
+        SetModel();
     }
 
     void Update()
@@ -26,15 +28,18 @@ public class PlayerChooser : MonoBehaviour
 
     #region Public Methods
 
-    public void ChooseModel()
+    public void SetModel()
     {
         string[] types = Enum.GetNames(typeof(Define.ColliderType));
-        int[] counts = new int[types.Length];
+        _counts = new int[types.Length];
         for (int i = 0; i < types.Length; i++)
         {
-            counts[i] = Manager.Pool.GetCounts(types[i]);
+            _counts[i] = Manager.Pool.GetCounts(types[i]);
         }
-        
+    }
+
+    public void StopRoulette()
+    {
     }
 
     #endregion
